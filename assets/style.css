@@ -3,6 +3,10 @@
 body {
 	max-width: 1920px;
 	margin: auto;
+	/* Augmenter le contraste des textes */
+	color: #333;
+    background-color: #fff;
+
 }
 
 /* Police par défaut */
