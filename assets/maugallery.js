@@ -1,25 +1,33 @@
+//Partie 1 : Initialisation et paramètres par défaut
 (function($) {
+  // Initialisation du plugin mauGallery
   $.fn.mauGallery = function(options) {
+    // Fusion des options par défaut avec les options fournies
     var options = $.extend($.fn.mauGallery.defaults, options);
     var tagsCollection = [];
     return this.each(function() {
+      // Création de l'enveloppe des éléments
       $.fn.mauGallery.methods.createRowWrapper($(this));
       if (options.lightBox) {
+        // Création de la lightbox si activée
         $.fn.mauGallery.methods.createLightBox(
           $(this),
           options.lightboxId,
           options.navigation
         );
       }
+      // Ajout des écouteurs d'événements
       $.fn.mauGallery.listeners(options);
 
       $(this)
         .children(".gallery-item")
         .each(function(index) {
+          // Adaptation des images et ajout dans l'enveloppe
           $.fn.mauGallery.methods.responsiveImageItem($(this));
           $.fn.mauGallery.methods.moveItemInRowWrapper($(this));
           $.fn.mauGallery.methods.wrapItemInColumn($(this), options.columns);
           var theTag = $(this).data("gallery-tag");
+          // Collection des tags pour le filtrage
           if (
             options.showTags &&
             theTag !== undefined &&
@@ -29,6 +37,7 @@
           }
         });
 
+      // Affichage des tags si activé
       if (options.showTags) {
         $.fn.mauGallery.methods.showItemTags(
           $(this),
@@ -40,6 +49,8 @@
       $(this).fadeIn(500);
     });
   };
+
+  // Paramètres par défaut du plugin
   $.fn.mauGallery.defaults = {
     columns: 3,
     lightBox: true,
@@ -48,78 +59,89 @@
     tagsPosition: "bottom",
     navigation: true
   };
+//Partie 2 : Écouteurs d'événements
+  // Ajout des écouteurs d'événements
   $.fn.mauGallery.listeners = function(options) {
-    $(".gallery-item").on("click", function() {
-      if (options.lightBox && $(this).prop("tagName") === "IMG") {
-        $.fn.mauGallery.methods.openLightBox($(this), options.lightboxId);
-      } else {
-        return;
+      $(".gallery-item").on("click", function() {
+        if (options.lightBox && $(this).prop("tagName") === "IMG") {
+          $.fn.mauGallery.methods.openLightBox($(this), options.lightboxId);
+        } else {
+          return;
+        }
+      });
+  
+      $(".gallery").on("click", ".nav-link", $.fn.mauGallery.methods.filterByTag);
+      $(".gallery").on("click", ".mg-prev", () =>
+        $.fn.mauGallery.methods.prevImage(options.lightboxId)
+      );
+      $(".gallery").on("click", ".mg-next", () =>
+        $.fn.mauGallery.methods.nextImage(options.lightboxId)
+      );
+    };
+//Partie 3 : Méthodes principales
+// Méthodes principales du plugin
+$.fn.mauGallery.methods = {
+  // Création de l'enveloppe des éléments
+  createRowWrapper(element) {
+    if (
+      !element
+        .children()
+        .first()
+        .hasClass("row")
+    ) {
+      element.append('<div class="gallery-items-row row"></div>');
+    }
+  },
+  // Ajout d'une image dans une colonne
+  wrapItemInColumn(element, columns) {
+    if (columns.constructor === Number) {
+      element.wrap(
+        `<div class='item-column mb-4 col-${Math.ceil(12 / columns)}'></div>`
+      );
+    } else if (columns.constructor === Object) {
+      var columnClasses = "";
+      if (columns.xs) {
+        columnClasses += ` col-${Math.ceil(12 / columns.xs)}`;
       }
-    });
-
-    $(".gallery").on("click", ".nav-link", $.fn.mauGallery.methods.filterByTag);
-    $(".gallery").on("click", ".mg-prev", () =>
-      $.fn.mauGallery.methods.prevImage(options.lightboxId)
-    );
-    $(".gallery").on("click", ".mg-next", () =>
-      $.fn.mauGallery.methods.nextImage(options.lightboxId)
-    );
-  };
-  $.fn.mauGallery.methods = {
-    createRowWrapper(element) {
-      if (
-        !element
-          .children()
-          .first()
-          .hasClass("row")
-      ) {
-        element.append('<div class="gallery-items-row row"></div>');
+      if (columns.sm) {
+        columnClasses += ` col-sm-${Math.ceil(12 / columns.sm)}`;
       }
-    },
-    wrapItemInColumn(element, columns) {
-      if (columns.constructor === Number) {
-        element.wrap(
-          `<div class='item-column mb-4 col-${Math.ceil(12 / columns)}'></div>`
-        );
-      } else if (columns.constructor === Object) {
-        var columnClasses = "";
-        if (columns.xs) {
-          columnClasses += ` col-${Math.ceil(12 / columns.xs)}`;
-        }
-        if (columns.sm) {
-          columnClasses += ` col-sm-${Math.ceil(12 / columns.sm)}`;
-        }
-        if (columns.md) {
-          columnClasses += ` col-md-${Math.ceil(12 / columns.md)}`;
-        }
-        if (columns.lg) {
-          columnClasses += ` col-lg-${Math.ceil(12 / columns.lg)}`;
-        }
-        if (columns.xl) {
-          columnClasses += ` col-xl-${Math.ceil(12 / columns.xl)}`;
-        }
-        element.wrap(`<div class='item-column mb-4${columnClasses}'></div>`);
-      } else {
-        console.error(
-          `Columns should be defined as numbers or objects. ${typeof columns} is not supported.`
-        );
+      if (columns.md) {
+        columnClasses += ` col-md-${Math.ceil(12 / columns.md)}`;
       }
-    },
-    moveItemInRowWrapper(element) {
-      element.appendTo(".gallery-items-row");
-    },
-    responsiveImageItem(element) {
-      if (element.prop("tagName") === "IMG") {
-        element.addClass("img-fluid");
+      if (columns.lg) {
+        columnClasses += ` col-lg-${Math.ceil(12 / columns.lg)}`;
       }
-    },
-    openLightBox(element, lightboxId) {
-      $(`#${lightboxId}`)
-        .find(".lightboxImage")
-        .attr("src", element.attr("src"));
-      $(`#${lightboxId}`).modal("toggle");
-    },
-    prevImage() {
+      if (columns.xl) {
+        columnClasses += ` col-xl-${Math.ceil(12 / columns.xl)}`;
+      }
+      element.wrap(`<div class='item-column mb-4${columnClasses}'></div>`);
+    } else {
+      console.error(
+        `Columns should be defined as numbers or objects. ${typeof columns} is not supported.`
+      );
+    }
+  },
+  // Déplacement des éléments dans l'enveloppe
+  moveItemInRowWrapper(element) {
+    element.appendTo(".gallery-items-row");
+  },
+  // Adaptation des images pour la réactivité
+  responsiveImageItem(element) {
+    if (element.prop("tagName") === "IMG") {
+      element.addClass("img-fluid");
+    }
+  },
+  // Ouverture de la lightbox
+  openLightBox(element, lightboxId) {
+    $(`#${lightboxId}`)
+      .find(".lightboxImage")
+      .attr("src", element.attr("src"));
+    $(`#${lightboxId}`).modal("toggle");
+  },
+//Partie 4 : Navigation dans la lightbox
+  // Passer à l'image précédente
+  prevImage(lightboxId) {
       let activeImage = null;
       $("img.gallery-item").each(function() {
         if ($(this).attr("src") === $(".lightboxImage").attr("src")) {
@@ -146,19 +168,20 @@
         });
       }
       let index = 0,
-        next = null;
+        prev = null;
 
       $(imagesCollection).each(function(i) {
         if ($(activeImage).attr("src") === $(this).attr("src")) {
-          index = i ;
+          index = i - 1;
         }
       });
-      next =
+      prev =
         imagesCollection[index] ||
         imagesCollection[imagesCollection.length - 1];
-      $(".lightboxImage").attr("src", $(next).attr("src"));
+      $(".lightboxImage").attr("src", $(prev).attr("src"));
     },
-    nextImage() {
+    // Passer à l'image suivante
+    nextImage(lightboxId) {
       let activeImage = null;
       $("img.gallery-item").each(function() {
         if ($(this).attr("src") === $(".lightboxImage").attr("src")) {
@@ -189,13 +212,15 @@
 
       $(imagesCollection).each(function(i) {
         if ($(activeImage).attr("src") === $(this).attr("src")) {
-          index = i;
+          index = i + 1;
         }
       });
       next = imagesCollection[index] || imagesCollection[0];
       $(".lightboxImage").attr("src", $(next).attr("src"));
     },
-    createLightBox(gallery, lightboxId, navigation) {
+//Partie 5 : Méthodes en +
+  // Création de la lightbox
+  createLightBox(gallery, lightboxId, navigation) {
       gallery.append(`<div class="modal fade" id="${
         lightboxId ? lightboxId : "galleryLightbox"
       }" tabindex="-1" role="dialog" aria-hidden="true">
@@ -207,7 +232,7 @@
                                 ? '<div class="mg-prev" style="cursor:pointer;position:absolute;top:50%;left:-15px;background:white;"><</div>'
                                 : '<span style="display:none;" />'
                             }
-                            <img class="lightboxImage img-fluid" alt="Contenu de l'image affichée dans la modale au clique"/>
+                            <img class="lightboxImage img-fluid" alt="Contenu de l\'image affichée dans la modale au clique"/>
                             ${
                               navigation
                                 ? '<div class="mg-next" style="cursor:pointer;position:absolute;top:50%;right:-15px;background:white;}">></div>'
@@ -218,11 +243,12 @@
                 </div>
             </div>`);
     },
+    // Affichage des tags
     showItemTags(gallery, position, tags) {
       var tagItems =
         '<li class="nav-item"><span class="nav-link active active-tag"  data-images-toggle="all">Tous</span></li>';
       $.each(tags, function(index, value) {
-        tagItems += `<li class="nav-item active">
+        tagItems += `<li class="nav-item">
                 <span class="nav-link"  data-images-toggle="${value}">${value}</span></li>`;
       });
       var tagsRow = `<ul class="my-4 tags-bar nav nav-pills">${tagItems}</ul>`;
@@ -235,12 +261,13 @@
         console.error(`Unknown tags position: ${position}`);
       }
     },
+    // Filtrage des éléments par tag
     filterByTag() {
       if ($(this).hasClass("active-tag")) {
         return;
       }
       $(".active-tag").removeClass("active active-tag");
-      $(this).addClass("active-tag");
+      $(this).addClass("active active-tag");
 
       var tag = $(this).data("images-toggle");
 

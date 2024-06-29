@@ -1,15 +1,21 @@
+/*Partie 1 : Styles généraux et top-header*/
+/* Largeur maximale du corps */
 body {
 	max-width: 1920px;
 	margin: auto;
 }
+
+/* Police par défaut */
 * {
 	font-family: 'Inter';
 	font-style: normal;
 }
+
+/* En-tête */
 .top-header {
 	background-color: white;
 	position: sticky;
-	top:0;
+	top: 0;
 	z-index: 1000;
 	display: flex;
 	justify-content: space-between;
@@ -18,10 +24,12 @@ body {
 	align-items: center;
 }
 
+/* Nom de l'en-tête */
 .top-header .name {
 	font-size: 26px;
 }
 
+/* Navigation */
 .nav ul {
 	display: flex;
 	list-style-type: none;
@@ -29,19 +37,23 @@ body {
 	margin-bottom: 0;
 }
 
+/* Éléments de navigation */
 .nav li {
 	padding-inline: 10px;
 }
 
+/* Liens de navigation */
 .nav a {
 	text-decoration: none;
-	color: #000
+	color: #000;
 }
 
+/* Icônes des liens sociaux */
 .social-link img {
 	width: 20px;
 }
-
+/* Partie 2 : Section "À propos" et images */
+/* Section à propos */
 #about {
 	display: flex;
 	background-color: #F6D2B8;
@@ -50,6 +62,7 @@ body {
 	position: relative;
 }
 
+/* Image à gauche avec fond */
 .picture.left::before {
 	content: ' ';
 	background-color: #E5975F;
@@ -61,6 +74,7 @@ body {
 	z-index: -1;
 }
 
+/* Conteneur d'image */
 .picture {
 	flex: 1;
 	margin: 0 20px;
@@ -69,10 +83,11 @@ body {
 
 .picture img {
 	width: 100%;
-
 }
+
+/* Contenu à propos */
 #about-me {
-	flex: 2
+	flex: 2;
 }
 .about-me__title {
 	margin-top: 1em;
@@ -89,36 +104,100 @@ body {
 	width: 80%;
 	font-size: 14px;
 }
-
-#gallery {
-	/*	min-height: 100vh; */
+/* Partie 2 : Section "À propos" et images */
+/* Section à propos */
+#about {
+	display: flex;
+	background-color: #F6D2B8;
+	padding-inline: 100px;
+	padding-block: 100px;
+	position: relative;
 }
-.title{
+
+/* Image à gauche avec fond */
+.picture.left::before {
+	content: ' ';
+	background-color: #E5975F;
+	width: 374px;
+	height: 329px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	z-index: -1;
+}
+
+/* Conteneur d'image */
+.picture {
+	flex: 1;
+	margin: 0 20px;
+	z-index: 0;
+}
+
+.picture img {
+	width: 100%;
+}
+
+/* Contenu à propos */
+#about-me {
+	flex: 2;
+}
+.about-me__title {
+	margin-top: 1em;
+	margin-bottom: 60px;
+	font-size: 30px;
+}
+.about-me__introduction {
+	font-family: 'Spectral';
+	font-weight: 800;
+	font-style: italic;
+	width: 60%;
+}
+#about-me p {
+	width: 80%;
+	font-size: 14px;
+}
+/* Partie 3 : Galerie et services */
+/* Section galerie */
+/* #gallery {
+	min-height: 100vh;
+} */
+
+/* Titre de section */
+.title {
 	text-align: center;
 	padding-block: 2em;
 }
+
+/* Navigation dans la galerie */
 .gallery .nav {
 	justify-content: center;
 }
+
+/* Mise en évidence des liens actifs */
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
 	color: #fff;
 	background-color: #BEB45A;
-	border-radius:0 ;
+	border-radius: 0;
 }
+
+/* Couleur des liens */
 .nav-pills .nav-link {
-	color: #000
+	color: #000;
 }
+
+/* Colonnes des éléments */
 .item-column {
 	position: relative;
 	margin-bottom: 0 !important;
 	padding: 0;
 }
-.item-column::after{
+.item-column::after {
 	content: "";
 	display: block;
 	padding-bottom: 100%;
-
 }
+
+/* Éléments de la galerie */
 .gallery-item {
 	position: absolute;
 	width: 100%;
@@ -126,6 +205,8 @@ body {
 	object-fit: cover;
 	padding: .5em;
 }
+
+/* Boutons de navigation de la lightbox */
 .mg-prev, .mg-next {
 	width: 30px;
 	height: 30px;
@@ -136,6 +217,7 @@ body {
 	font-size: 24px;
 }
 
+/* Citations */
 .quote {
 	font-family: 'Spectral';
 	font-style: italic;
@@ -147,7 +229,6 @@ body {
 	font-family: Spectral;
 	font-style: italic;
 	font-weight: 300;
-
 }
 .quote__author {
 	font-family: Spectral;
@@ -155,12 +236,13 @@ body {
 	font-size: 22px;
 }
 
+/* Section services */
 #services {
 	margin: auto;
-	background-color: #A8D5D8 ;
+	background-color: #A8D5D8;
 	position: relative;
 }
-#services .container::before{
+#services .container::before {
 	content: ' ';
 	background-color: #1C6474;
 	position: absolute;
@@ -175,7 +257,6 @@ body {
 	justify-content: space-between;
 	display: flex;
 	padding : 2em 0;
-
 }
 
 .service {
@@ -189,10 +270,11 @@ body {
 	justify-content: space-between;
 	z-index: 1;
 }
-
+/* Partie 4 : Section contact et responsive design */
+/* Section contact */
 #contact {
 	margin: auto;
-	background-color: #D8D3A8 ;
+	background-color: #D8D3A8;
 	position: relative;
 	padding-inline: 100px;
 	padding-block: 100px;
@@ -201,6 +283,8 @@ body {
 #contact .container {
 	display: flex;
 }
+
+/* Image à droite avec fond */
 .picture.right::before {
 	content: ' ';
 	background-color: #BEB45A;
@@ -211,10 +295,13 @@ body {
 	right: 0;
 	z-index: -1;
 }
+
+/* Conteneur de formulaire */
 .form-container {
 	flex : 2;
-
 }
+
+/* Formulaire */
 form {
 	display: flex;
 	flex-direction: column;
@@ -241,9 +328,10 @@ form textarea {
 }
 input[type="submit"] {
 	background-color: #BEB45A;
-	padding: .5em 1em
+	padding: .5em 1em;
 }
 
+/* Responsive design */
 @media all and (max-width: 1180px) {
 	.picture {
 		flex : 2;
@@ -261,9 +349,8 @@ input[type="submit"] {
 }
 
 @media all and (max-width: 1000px) {
-	#about{
+	#about {
 		flex-direction: column;
-
 	}
 	.picture {
 		width: 50%;
@@ -277,7 +364,7 @@ input[type="submit"] {
 		left: 0;
 		z-index: -1;
 	}
-	.about-me__title{
+	.about-me__title {
 		text-align: center;
 		margin-top: 1em;
 	}
@@ -288,13 +375,12 @@ input[type="submit"] {
 		width: 100%;
 		max-width: 100%;
 		height: auto;
-		margin: 2em 0
+		margin: 2em 0;
 	}
-	.service__description{
+	.service__description {
 		margin-bottom: 1em;
 	}
-
-	#services .container::before{
+	#services .container::before {
 		width: 30%;
 		height: 100%;
 		bottom: 0;
@@ -302,7 +388,6 @@ input[type="submit"] {
 		left: auto;
 		z-index: 0;
 	}
-
 	#contact .container {
 		flex-direction: column;
 	}
@@ -353,4 +438,3 @@ input[type="submit"] {
 		width: 80%;
 	}
 }
-
