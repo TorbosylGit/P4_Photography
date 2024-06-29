@@ -177,10 +177,10 @@ body {
 	justify-content: center;
 }
 
-/* Mise en évidence des liens actifs */
+/* Mise en évidence des liens actifs (catégories) */
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
 	color: #fff;
-	background-color: #BEB45A;
+	background-color: #45411C;
 	border-radius: 0;
 }
 
